@@ -248,8 +248,14 @@ class QrLogin:
         # get QR code ticket
         ticket = None
         retry_times = 85
-        for _ in range(retry_times):
+        for i in range(retry_times):
             ticket = self._get_qrcode_ticket()
+
+            # 过期的时候，发送消息通知扫码
+            if i == 2:
+                success_message = "二维码过期，请重新获取扫描"
+                send_wechat(success_message)
+
             if ticket:
                 break
             time.sleep(2)
