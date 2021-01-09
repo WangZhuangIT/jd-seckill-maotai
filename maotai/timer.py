@@ -14,6 +14,7 @@ class Timer(object):
         # buy_time = '2020-12-22 09:59:59.500'
         localtime = time.localtime(time.time())
         buy_time_everyday = global_config.getRaw('config', 'buy_time').__str__()
+        reserve_time_everyday = global_config.getRaw('config', 'reserve_time').__str__()
         last_purchase_time_everyday = global_config.getRaw('config', 'last_purchase_time').__str__()
 
         # 最后购买时间
@@ -23,6 +24,11 @@ class Timer(object):
 
         buy_time_config = datetime.strptime(
             localtime.tm_year.__str__() + '-' + localtime.tm_mon.__str__() + '-' + localtime.tm_mday.__str__() + ' ' + buy_time_everyday,
+            "%Y-%m-%d %H:%M:%S.%f")
+
+        # 预约时间
+        reserve_time_config = datetime.strptime(
+            localtime.tm_year.__str__() + '-' + localtime.tm_mon.__str__() + '-' + localtime.tm_mday.__str__() + ' ' + reserve_time_everyday,
             "%Y-%m-%d %H:%M:%S.%f")
 
         if time.mktime(localtime) < time.mktime(buy_time_config.timetuple()):
@@ -43,7 +49,18 @@ class Timer(object):
         # self.buy_time = buy_time_config
         print("购买时间：{}".format(self.buy_time))
 
+        if time.mktime(localtime) < time.mktime(reserve_time_config.timetuple()):
+            # 取正确的预约时间
+            self.reserve_time = reserve_time_config
+        else:
+            self.reserve_time = datetime.strptime(
+                localtime.tm_year.__str__() + '-' + localtime.tm_mon.__str__() + '-' + (
+                        localtime.tm_mday + 1).__str__() + ' ' + reserve_time_everyday,
+                "%Y-%m-%d %H:%M:%S.%f")
+        print("预约时间：{}".format(self.reserve_time))
+
         self.buy_time_ms = int(time.mktime(self.buy_time.timetuple()) * 1000.0 + self.buy_time.microsecond / 1000)
+        self.reserve_time_ms = int(time.mktime(self.reserve_time.timetuple()) * 1000.0 + self.reserve_time.microsecond / 1000)
         self.sleep_interval = sleep_interval
 
         self.diff_time = self.local_jd_time_diff()
@@ -73,13 +90,20 @@ class Timer(object):
         """
         return self.local_time() - self.jd_time()
 
-    def start(self):
+    def start(self, op_type="buy"):
         # print(datetime.now())
-        logger.info('正在等待到达设定时间:{}，检测本地时间与京东服务器时间误差为【{}】毫秒'.format(self.buy_time, self.diff_time))
+        if op_type == "buy":
+            time_point = self.buy_time
+            time_point_ms = self.buy_time_ms
+        else:
+            time_point = self.reserve_time
+            time_point_ms = self.reserve_time_ms
+
+        logger.info('操作类型：' + op_type + '正在等待到达设定时间:{}，检测本地时间与京东服务器时间误差为【{}】毫秒'.format(time_point, self.diff_time))
         while True:
             # 本地时间减去与京东的时间差，能够将时间误差提升到0.1秒附近
             # 具体精度依赖获取京东服务器时间的网络时间损耗
-            if self.local_time() - self.diff_time >= self.buy_time_ms:
+            if self.local_time() - self.diff_time >= time_point_ms:
                 logger.info('时间到达，开始执行……')
                 break
             else:

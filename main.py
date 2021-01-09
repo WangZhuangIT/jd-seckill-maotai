@@ -3,7 +3,7 @@ import sys
 from maotai.jd_spider_requests import JdSeckill
 
 if __name__ == '__main__':
-    a = """
+    menu = """
 
        oooo oooooooooo.            .oooooo..o                     oooo         o8o  oooo  oooo  
        `888 `888'   `Y8b          d8P'    `Y8                     `888         `"'  `888  `888  
@@ -18,10 +18,16 @@ if __name__ == '__main__':
  1.预约商品
  2.秒杀抢购商品
     """
-    print(a)
-
+    print(menu)
     jd_seckill = JdSeckill()
-    choice_function = input('请选择:')
+    params = sys.argv
+
+    choice_function = 0
+    if len(params) >= 2 :
+        choice_function = params[1]
+    else:
+        choice_function = input('请选择:')
+
     if choice_function == '1':
         jd_seckill.reserve()
     elif choice_function == '2':

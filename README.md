@@ -1,16 +1,6 @@
 # Jd_Seckill
 请安装保证Python版本大于等于3.6
 
-## 关注公众号观看配置视频
-- 公众号：《Python数据结构》
-
-![](https://oscimg.oschina.net/oscnet/up-495d917e980408b9f7bb468967502c0352f.JPEG)
-
-## 扫码进群技术交流
-- 个人微信(备注茅台)：`myvpnbook`
-
-![](https://oscimg.oschina.net/oscnet/up-539a791c98df445d9bebb75c24be17b0b0c.png)
-
 ## 优化内容
 
 - 2021-01-06 可在配置文件中调整与京东服务器的误差了
@@ -102,17 +92,18 @@
 ## 使用教程  
 #### 1. 推荐Chrome浏览器
 #### 2. 网页扫码登录，或者账号密码登录
-#### 3. 填写config.ini配置信息 
-(1)`eid`和`fp`找个普通商品随便下单,然后抓包就能看到,这两个值可以填固定的 
+#### 3. 填写config.ini配置信息
+(1) 重命名config.bk.ini配置文件为config.ini，然后按照说明配置即可 
+(2)`eid`和`fp`找个普通商品随便下单,然后抓包就能看到,这两个值可以填固定的 
 > 随便找一个商品下单，然后进入结算页面，打开浏览器的调试窗口，切换到控制台Tab页，在控制台中输入变量`_JdTdudfp`，即可从输出的Json中获取`eid`和`fp`。  
 > 不会的话参考原作者的issue https://github.com/zhou-xiaojun/jd_mask/issues/22
 
-(2)`sku_id`,`DEFAULT_USER_AGENT` 
+(3)`sku_id`,`DEFAULT_USER_AGENT` 
 > `sku_id`已经按照茅台的填好。
 > `cookies_string` 现在已经不需要填写了，扫码确认登陆后会自动生成cookie信息
 > `DEFAULT_USER_AGENT` 可以用默认的，无需修改
 
-(3)误差时间`step_error_time_ms`调整
+(4)误差时间`step_error_time_ms`调整
 > 根据控制台打印的信息手动修改一下，【900】是多少就填写多少
 - 正在等待到达设定时间:2021-01-07 09:59:59.800000，检测本地时间与京东服务器时间误差为【1】毫秒
 
