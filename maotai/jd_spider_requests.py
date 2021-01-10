@@ -336,7 +336,7 @@ class JdSeckill(object):
         self._seckill()
 
     @check_login
-    def seckill_by_proc_pool(self, work_count=3):
+    def seckill_by_proc_pool(self, work_count=10):
         """
         多进程进行抢购
         work_count：进程数量
@@ -628,5 +628,5 @@ class JdSeckill(object):
             logger.info('抢购失败，返回信息:{}'.format(resp_json))
             if global_config.getRaw('messenger', 'enable') == 'true':
                 error_message = '抢购失败，返回信息:{}'.format(resp_json)
-                send_wechat(error_message)
+                # send_wechat(error_message)  注释掉抢购失败的消息推送
             return False
